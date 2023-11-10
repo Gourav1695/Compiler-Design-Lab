@@ -1,0 +1,2041 @@
+Terminals unused in grammar
+
+    NOT_TOK
+    BIT_AND_TOK
+    BIT_OR_TOK
+    BACKSLASH_TOK
+    SPEECH_TOK
+    INVCOMMA_TOK
+    XOR_TOK
+    NEG_TOK
+    LSHIFT_TOK
+    RSHIFT_TOK
+    INC_TOK
+    DEC_TOK
+    PLUS_ASSIGN_TOK
+    MINUS_ASSIGN_TOK
+    MULT_ASSIGN_TOK
+    DIV_ASSIGN_TOK
+    MOD_ASSIGN_TOK
+    DO_TOK
+    FOR_TOK
+    PRINT_TOK
+    SCAN_TOK
+    DEF_TOK
+    TYPEDEF_TOK
+    BREAK_TOK
+    CONTINUE_TOK
+    SIZEOF_TOK
+    CASE_TOK
+    SWITCH_TOK
+    SCANF_TOK
+    LONG_TOK
+    SHORT_TOK
+
+
+State 94 conflicts: 10 shift/reduce
+State 112 conflicts: 5 shift/reduce
+
+
+Grammar
+
+    0 $accept: S $end
+
+    1 S: header S
+    2  | header
+    3  | MAIN_FN
+    4  | USER_FN S1
+    5  | DECLARE_ASSIGN SEMICOLON_TOK S1
+
+    6 S1: USER_FN S1
+    7   | DECLARE_ASSIGN SEMICOLON_TOK S1
+    8   | header
+    9   | USER_FN
+   10   | MAIN_FN
+   11   | DECLARE_ASSIGN SEMICOLON_TOK
+
+   12 open_paren: LPAREN_TOK
+
+   13 close_paren: RPAREN_TOK
+
+   14 header: HASH_TOK INCLUDE_TOK LT_TOK ID_TOK DOT_TOK ID_TOK GT_TOK
+   15       | HASH_TOK INCLUDE_TOK STRING_CONST_TOK
+
+   16 $@1: ε
+
+   17 MAIN_FN: INT_TOK MAIN_TOK $@1 param block
+
+   18 $@2: ε
+
+   19 USER_FN: datatype ID_TOK $@2 param block
+
+   20 param: open_paren params close_paren
+   21      | LPAREN_TOK RPAREN_TOK
+
+   22 params: datatype ID_TOK COMMA_TOK params
+   23       | datatype ID_TOK
+
+   24 datatype: INT_TOK
+   25         | FLOAT_TOK
+   26         | DOUBLE_TOK
+   27         | CHAR_TOK
+   28         | VOID_TOK
+
+   29 start_block: LCURL_TOK
+
+   30 end_block: RCURL_TOK
+
+   31 block: start_block blocks end_block
+   32      | start_block end_block
+
+   33 blocks: block STATEMENTS blocks
+   34       | STATEMENTS blocks
+   35       | STATEMENTS
+
+   36 STATEMENTS: stmt STATEMENTS
+   37           | stmt
+
+   38 stmt: DECLARE_ASSIGN SEMICOLON_TOK
+   39     | EXP_ASSIGN SEMICOLON_TOK
+   40     | CONDITIONAL
+   41     | ITERATIVE
+   42     | FUNCTION_CALL SEMICOLON_TOK
+   43     | RET_TOK expression SEMICOLON_TOK
+   44     | PRINTF_ST
+
+   45 PRINTF_ST: PRINTF_TOK args SEMICOLON_TOK
+
+   46 expression: ID_TOK
+   47           | ID_TOK array_ele
+   48           | INT_CONST_TOK
+   49           | REAL_CONST_TOK
+   50           | CHAR_CONST_TOK
+   51           | STRING_CONST_TOK
+   52           | FUNCTION_CALL
+   53           | LPAREN_TOK expression RPAREN_TOK
+   54           | expression arith_op expression
+
+   55 arith_op: PLUS_TOK
+   56         | MINUS_TOK
+   57         | MULT_TOK
+   58         | DIV_TOK
+   59         | MOD_TOK
+
+   60 DECLARE_ASSIGN: datatype varlist
+
+   61 array_ele: LSQUARE_TOK ID_TOK RSQUARE_TOK
+   62          | LSQUARE_TOK INT_CONST_TOK RSQUARE_TOK
+   63          | LSQUARE_TOK RSQUARE_TOK
+
+   64 array_size: LSQUARE_TOK INT_CONST_TOK RSQUARE_TOK
+   65           | LSQUARE_TOK REAL_CONST_TOK RSQUARE_TOK
+
+   66 varlist: ID_TOK
+   67        | ID_TOK COMMA_TOK varlist
+   68        | ID_TOK ASSIGN_TOK expression COMMA_TOK varlist
+   69        | ID_TOK ASSIGN_TOK expression
+   70        | ID_TOK array_size COMMA_TOK varlist
+   71        | ID_TOK array_size
+
+   72 EXP_ASSIGN: ID_TOK ASSIGN_TOK expression
+
+   73 $@3: ε
+
+   74 IF_ST: IF_TOK $@3 open_paren cond_exp close_paren
+
+   75 $@4: ε
+
+   76 ELSE_PART: ELSE_TOK $@4 block
+
+   77 IF_PART: IF_ST block
+
+   78 CONDITIONAL: IF_PART ELSE_PART
+   79            | IF_PART
+
+   80 cond_exp: expression
+   81         | expression comparison expression
+
+   82 comparison: GT_TOK
+   83           | LT_TOK
+   84           | GTE_TOK
+   85           | LTE_TOK
+   86           | NEQ_TOK
+   87           | EQ_TOK
+   88           | AND_TOK
+   89           | OR_TOK
+
+   90 $@5: ε
+
+   91 WHILE_ST: WHILE_TOK $@5 open_paren cond_exp close_paren
+
+   92 ITERATIVE: WHILE_ST block
+
+   93 FUNCTION_CALL: ID_TOK args
+
+   94 args: LPAREN_TOK arg RPAREN_TOK
+   95     | LPAREN_TOK RPAREN_TOK
+
+   96 arg: expression
+   97    | expression COMMA_TOK arg
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    LPAREN_TOK (258) 12 21 53 94 95
+    GT_TOK <string> (259) 14 82
+    LT_TOK <string> (260) 14 83
+    RPAREN_TOK (261) 13 21 53 94 95
+    ASSIGN_TOK (262) 68 69 72
+    MINUS_TOK <string> (263) 56
+    PLUS_TOK <string> (264) 55
+    MULT_TOK <string> (265) 57
+    DIV_TOK <string> (266) 58
+    MOD_TOK <string> (267) 59
+    NOT_TOK (268)
+    SEMICOLON_TOK (269) 5 7 11 38 39 42 43 45
+    HASH_TOK (270) 14 15
+    DOT_TOK (271) 14
+    COMMA_TOK (272) 22 67 68 70 97
+    LCURL_TOK (273) 29
+    RCURL_TOK (274) 30
+    LSQUARE_TOK (275) 61 62 63 64 65
+    RSQUARE_TOK (276) 61 62 63 64 65
+    BIT_AND_TOK (277)
+    BIT_OR_TOK (278)
+    BACKSLASH_TOK (279)
+    SPEECH_TOK (280)
+    INVCOMMA_TOK (281)
+    XOR_TOK (282)
+    NEG_TOK (283)
+    EQ_TOK <string> (284) 87
+    GTE_TOK <string> (285) 84
+    LTE_TOK <string> (286) 85
+    LSHIFT_TOK (287)
+    RSHIFT_TOK (288)
+    AND_TOK <string> (289) 88
+    OR_TOK <string> (290) 89
+    NEQ_TOK <string> (291) 86
+    INC_TOK (292)
+    DEC_TOK (293)
+    PLUS_ASSIGN_TOK (294)
+    MINUS_ASSIGN_TOK (295)
+    MULT_ASSIGN_TOK (296)
+    DIV_ASSIGN_TOK (297)
+    MOD_ASSIGN_TOK (298)
+    DO_TOK (299)
+    WHILE_TOK (300) 91
+    FOR_TOK (301)
+    IF_TOK (302) 74
+    ELSE_TOK (303) 76
+    RET_TOK (304) 43
+    PRINT_TOK (305)
+    SCAN_TOK (306)
+    DEF_TOK (307)
+    TYPEDEF_TOK (308)
+    BREAK_TOK (309)
+    CONTINUE_TOK (310)
+    SIZEOF_TOK (311)
+    CASE_TOK (312)
+    SWITCH_TOK (313)
+    MAIN_TOK (314) 17
+    INCLUDE_TOK (315) 14 15
+    PRINTF_TOK (316) 45
+    SCANF_TOK (317)
+    ID_TOK <string> (318) 14 19 22 23 46 47 61 66 67 68 69 70 71 72 93
+    INT_CONST_TOK <number> (319) 48 62 64
+    CHAR_CONST_TOK <string> (320) 50
+    REAL_CONST_TOK <decimal> (321) 49 65
+    STRING_CONST_TOK <string> (322) 15 51
+    INT_TOK (323) 17 24
+    CHAR_TOK (324) 27
+    FLOAT_TOK (325) 25
+    DOUBLE_TOK (326) 26
+    LONG_TOK (327)
+    SHORT_TOK (328)
+    VOID_TOK (329) 28
+
+
+Nonterminals, with rules where they appear
+
+    $accept (75)
+        on left: 0
+    S (76)
+        on left: 1 2 3 4 5
+        on right: 0 1
+    S1 (77)
+        on left: 6 7 8 9 10 11
+        on right: 4 5 6 7
+    open_paren (78)
+        on left: 12
+        on right: 20 74 91
+    close_paren (79)
+        on left: 13
+        on right: 20 74 91
+    header (80)
+        on left: 14 15
+        on right: 1 2 8
+    MAIN_FN (81)
+        on left: 17
+        on right: 3 10
+    $@1 (82)
+        on left: 16
+        on right: 17
+    USER_FN (83)
+        on left: 19
+        on right: 4 6 9
+    $@2 (84)
+        on left: 18
+        on right: 19
+    param (85)
+        on left: 20 21
+        on right: 17 19
+    params (86)
+        on left: 22 23
+        on right: 20 22
+    datatype (87)
+        on left: 24 25 26 27 28
+        on right: 19 22 23 60
+    start_block (88)
+        on left: 29
+        on right: 31 32
+    end_block (89)
+        on left: 30
+        on right: 31 32
+    block (90)
+        on left: 31 32
+        on right: 17 19 33 76 77 92
+    blocks (91)
+        on left: 33 34 35
+        on right: 31 33 34
+    STATEMENTS (92)
+        on left: 36 37
+        on right: 33 34 35 36
+    stmt (93)
+        on left: 38 39 40 41 42 43 44
+        on right: 36 37
+    PRINTF_ST (94)
+        on left: 45
+        on right: 44
+    expression <Dtype> (95)
+        on left: 46 47 48 49 50 51 52 53 54
+        on right: 43 53 54 68 69 72 80 81 96 97
+    arith_op <string> (96)
+        on left: 55 56 57 58 59
+        on right: 54
+    DECLARE_ASSIGN (97)
+        on left: 60
+        on right: 5 7 11 38
+    array_ele (98)
+        on left: 61 62 63
+        on right: 47
+    array_size (99)
+        on left: 64 65
+        on right: 70 71
+    varlist (100)
+        on left: 66 67 68 69 70 71
+        on right: 60 67 68 70
+    EXP_ASSIGN (101)
+        on left: 72
+        on right: 39
+    IF_ST (102)
+        on left: 74
+        on right: 77
+    $@3 (103)
+        on left: 73
+        on right: 74
+    ELSE_PART (104)
+        on left: 76
+        on right: 78
+    $@4 (105)
+        on left: 75
+        on right: 76
+    IF_PART (106)
+        on left: 77
+        on right: 78 79
+    CONDITIONAL (107)
+        on left: 78 79
+        on right: 40
+    cond_exp <Dtype> (108)
+        on left: 80 81
+        on right: 74 91
+    comparison <string> (109)
+        on left: 82 83 84 85 86 87 88 89
+        on right: 81
+    WHILE_ST (110)
+        on left: 91
+        on right: 92
+    $@5 (111)
+        on left: 90
+        on right: 91
+    ITERATIVE (112)
+        on left: 92
+        on right: 41
+    FUNCTION_CALL <Dtype> (113)
+        on left: 93
+        on right: 42 52
+    args (114)
+        on left: 94 95
+        on right: 45 93
+    arg (115)
+        on left: 96 97
+        on right: 94 97
+
+
+State 0
+
+    0 $accept: • S $end
+
+    HASH_TOK    shift, and go to state 1
+    INT_TOK     shift, and go to state 2
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    S               go to state 7
+    header          go to state 8
+    MAIN_FN         go to state 9
+    USER_FN         go to state 10
+    datatype        go to state 11
+    DECLARE_ASSIGN  go to state 12
+
+
+State 1
+
+   14 header: HASH_TOK • INCLUDE_TOK LT_TOK ID_TOK DOT_TOK ID_TOK GT_TOK
+   15       | HASH_TOK • INCLUDE_TOK STRING_CONST_TOK
+
+    INCLUDE_TOK  shift, and go to state 13
+
+
+State 2
+
+   17 MAIN_FN: INT_TOK • MAIN_TOK $@1 param block
+   24 datatype: INT_TOK •
+
+    MAIN_TOK  shift, and go to state 14
+
+    $default  reduce using rule 24 (datatype)
+
+
+State 3
+
+   27 datatype: CHAR_TOK •
+
+    $default  reduce using rule 27 (datatype)
+
+
+State 4
+
+   25 datatype: FLOAT_TOK •
+
+    $default  reduce using rule 25 (datatype)
+
+
+State 5
+
+   26 datatype: DOUBLE_TOK •
+
+    $default  reduce using rule 26 (datatype)
+
+
+State 6
+
+   28 datatype: VOID_TOK •
+
+    $default  reduce using rule 28 (datatype)
+
+
+State 7
+
+    0 $accept: S • $end
+
+    $end  shift, and go to state 15
+
+
+State 8
+
+    1 S: header • S
+    2  | header •
+
+    HASH_TOK    shift, and go to state 1
+    INT_TOK     shift, and go to state 2
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    $default  reduce using rule 2 (S)
+
+    S               go to state 16
+    header          go to state 8
+    MAIN_FN         go to state 9
+    USER_FN         go to state 10
+    datatype        go to state 11
+    DECLARE_ASSIGN  go to state 12
+
+
+State 9
+
+    3 S: MAIN_FN •
+
+    $default  reduce using rule 3 (S)
+
+
+State 10
+
+    4 S: USER_FN • S1
+
+    HASH_TOK    shift, and go to state 1
+    INT_TOK     shift, and go to state 2
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    S1              go to state 17
+    header          go to state 18
+    MAIN_FN         go to state 19
+    USER_FN         go to state 20
+    datatype        go to state 11
+    DECLARE_ASSIGN  go to state 21
+
+
+State 11
+
+   19 USER_FN: datatype • ID_TOK $@2 param block
+   60 DECLARE_ASSIGN: datatype • varlist
+
+    ID_TOK  shift, and go to state 22
+
+    varlist  go to state 23
+
+
+State 12
+
+    5 S: DECLARE_ASSIGN • SEMICOLON_TOK S1
+
+    SEMICOLON_TOK  shift, and go to state 24
+
+
+State 13
+
+   14 header: HASH_TOK INCLUDE_TOK • LT_TOK ID_TOK DOT_TOK ID_TOK GT_TOK
+   15       | HASH_TOK INCLUDE_TOK • STRING_CONST_TOK
+
+    LT_TOK            shift, and go to state 25
+    STRING_CONST_TOK  shift, and go to state 26
+
+
+State 14
+
+   17 MAIN_FN: INT_TOK MAIN_TOK • $@1 param block
+
+    $default  reduce using rule 16 ($@1)
+
+    $@1  go to state 27
+
+
+State 15
+
+    0 $accept: S $end •
+
+    $default  accept
+
+
+State 16
+
+    1 S: header S •
+
+    $default  reduce using rule 1 (S)
+
+
+State 17
+
+    4 S: USER_FN S1 •
+
+    $default  reduce using rule 4 (S)
+
+
+State 18
+
+    8 S1: header •
+
+    $default  reduce using rule 8 (S1)
+
+
+State 19
+
+   10 S1: MAIN_FN •
+
+    $default  reduce using rule 10 (S1)
+
+
+State 20
+
+    6 S1: USER_FN • S1
+    9   | USER_FN •
+
+    HASH_TOK    shift, and go to state 1
+    INT_TOK     shift, and go to state 2
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    $default  reduce using rule 9 (S1)
+
+    S1              go to state 28
+    header          go to state 18
+    MAIN_FN         go to state 19
+    USER_FN         go to state 20
+    datatype        go to state 11
+    DECLARE_ASSIGN  go to state 21
+
+
+State 21
+
+    7 S1: DECLARE_ASSIGN • SEMICOLON_TOK S1
+   11   | DECLARE_ASSIGN • SEMICOLON_TOK
+
+    SEMICOLON_TOK  shift, and go to state 29
+
+
+State 22
+
+   19 USER_FN: datatype ID_TOK • $@2 param block
+   66 varlist: ID_TOK •
+   67        | ID_TOK • COMMA_TOK varlist
+   68        | ID_TOK • ASSIGN_TOK expression COMMA_TOK varlist
+   69        | ID_TOK • ASSIGN_TOK expression
+   70        | ID_TOK • array_size COMMA_TOK varlist
+   71        | ID_TOK • array_size
+
+    ASSIGN_TOK   shift, and go to state 30
+    COMMA_TOK    shift, and go to state 31
+    LSQUARE_TOK  shift, and go to state 32
+
+    SEMICOLON_TOK  reduce using rule 66 (varlist)
+    $default       reduce using rule 18 ($@2)
+
+    $@2         go to state 33
+    array_size  go to state 34
+
+
+State 23
+
+   60 DECLARE_ASSIGN: datatype varlist •
+
+    $default  reduce using rule 60 (DECLARE_ASSIGN)
+
+
+State 24
+
+    5 S: DECLARE_ASSIGN SEMICOLON_TOK • S1
+
+    HASH_TOK    shift, and go to state 1
+    INT_TOK     shift, and go to state 2
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    S1              go to state 35
+    header          go to state 18
+    MAIN_FN         go to state 19
+    USER_FN         go to state 20
+    datatype        go to state 11
+    DECLARE_ASSIGN  go to state 21
+
+
+State 25
+
+   14 header: HASH_TOK INCLUDE_TOK LT_TOK • ID_TOK DOT_TOK ID_TOK GT_TOK
+
+    ID_TOK  shift, and go to state 36
+
+
+State 26
+
+   15 header: HASH_TOK INCLUDE_TOK STRING_CONST_TOK •
+
+    $default  reduce using rule 15 (header)
+
+
+State 27
+
+   17 MAIN_FN: INT_TOK MAIN_TOK $@1 • param block
+
+    LPAREN_TOK  shift, and go to state 37
+
+    open_paren  go to state 38
+    param       go to state 39
+
+
+State 28
+
+    6 S1: USER_FN S1 •
+
+    $default  reduce using rule 6 (S1)
+
+
+State 29
+
+    7 S1: DECLARE_ASSIGN SEMICOLON_TOK • S1
+   11   | DECLARE_ASSIGN SEMICOLON_TOK •
+
+    HASH_TOK    shift, and go to state 1
+    INT_TOK     shift, and go to state 2
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    $default  reduce using rule 11 (S1)
+
+    S1              go to state 40
+    header          go to state 18
+    MAIN_FN         go to state 19
+    USER_FN         go to state 20
+    datatype        go to state 11
+    DECLARE_ASSIGN  go to state 21
+
+
+State 30
+
+   68 varlist: ID_TOK ASSIGN_TOK • expression COMMA_TOK varlist
+   69        | ID_TOK ASSIGN_TOK • expression
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 47
+    FUNCTION_CALL  go to state 48
+
+
+State 31
+
+   67 varlist: ID_TOK COMMA_TOK • varlist
+
+    ID_TOK  shift, and go to state 49
+
+    varlist  go to state 50
+
+
+State 32
+
+   64 array_size: LSQUARE_TOK • INT_CONST_TOK RSQUARE_TOK
+   65           | LSQUARE_TOK • REAL_CONST_TOK RSQUARE_TOK
+
+    INT_CONST_TOK   shift, and go to state 51
+    REAL_CONST_TOK  shift, and go to state 52
+
+
+State 33
+
+   19 USER_FN: datatype ID_TOK $@2 • param block
+
+    LPAREN_TOK  shift, and go to state 37
+
+    open_paren  go to state 38
+    param       go to state 53
+
+
+State 34
+
+   70 varlist: ID_TOK array_size • COMMA_TOK varlist
+   71        | ID_TOK array_size •
+
+    COMMA_TOK  shift, and go to state 54
+
+    $default  reduce using rule 71 (varlist)
+
+
+State 35
+
+    5 S: DECLARE_ASSIGN SEMICOLON_TOK S1 •
+
+    $default  reduce using rule 5 (S)
+
+
+State 36
+
+   14 header: HASH_TOK INCLUDE_TOK LT_TOK ID_TOK • DOT_TOK ID_TOK GT_TOK
+
+    DOT_TOK  shift, and go to state 55
+
+
+State 37
+
+   12 open_paren: LPAREN_TOK •
+   21 param: LPAREN_TOK • RPAREN_TOK
+
+    RPAREN_TOK  shift, and go to state 56
+
+    $default  reduce using rule 12 (open_paren)
+
+
+State 38
+
+   20 param: open_paren • params close_paren
+
+    INT_TOK     shift, and go to state 57
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    params    go to state 58
+    datatype  go to state 59
+
+
+State 39
+
+   17 MAIN_FN: INT_TOK MAIN_TOK $@1 param • block
+
+    LCURL_TOK  shift, and go to state 60
+
+    start_block  go to state 61
+    block        go to state 62
+
+
+State 40
+
+    7 S1: DECLARE_ASSIGN SEMICOLON_TOK S1 •
+
+    $default  reduce using rule 7 (S1)
+
+
+State 41
+
+   53 expression: LPAREN_TOK • expression RPAREN_TOK
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 63
+    FUNCTION_CALL  go to state 48
+
+
+State 42
+
+   46 expression: ID_TOK •
+   47           | ID_TOK • array_ele
+   93 FUNCTION_CALL: ID_TOK • args
+
+    LPAREN_TOK   shift, and go to state 64
+    LSQUARE_TOK  shift, and go to state 65
+
+    $default  reduce using rule 46 (expression)
+
+    array_ele  go to state 66
+    args       go to state 67
+
+
+State 43
+
+   48 expression: INT_CONST_TOK •
+
+    $default  reduce using rule 48 (expression)
+
+
+State 44
+
+   50 expression: CHAR_CONST_TOK •
+
+    $default  reduce using rule 50 (expression)
+
+
+State 45
+
+   49 expression: REAL_CONST_TOK •
+
+    $default  reduce using rule 49 (expression)
+
+
+State 46
+
+   51 expression: STRING_CONST_TOK •
+
+    $default  reduce using rule 51 (expression)
+
+
+State 47
+
+   54 expression: expression • arith_op expression
+   68 varlist: ID_TOK ASSIGN_TOK expression • COMMA_TOK varlist
+   69        | ID_TOK ASSIGN_TOK expression •
+
+    MINUS_TOK  shift, and go to state 68
+    PLUS_TOK   shift, and go to state 69
+    MULT_TOK   shift, and go to state 70
+    DIV_TOK    shift, and go to state 71
+    MOD_TOK    shift, and go to state 72
+    COMMA_TOK  shift, and go to state 73
+
+    $default  reduce using rule 69 (varlist)
+
+    arith_op  go to state 74
+
+
+State 48
+
+   52 expression: FUNCTION_CALL •
+
+    $default  reduce using rule 52 (expression)
+
+
+State 49
+
+   66 varlist: ID_TOK •
+   67        | ID_TOK • COMMA_TOK varlist
+   68        | ID_TOK • ASSIGN_TOK expression COMMA_TOK varlist
+   69        | ID_TOK • ASSIGN_TOK expression
+   70        | ID_TOK • array_size COMMA_TOK varlist
+   71        | ID_TOK • array_size
+
+    ASSIGN_TOK   shift, and go to state 30
+    COMMA_TOK    shift, and go to state 31
+    LSQUARE_TOK  shift, and go to state 32
+
+    $default  reduce using rule 66 (varlist)
+
+    array_size  go to state 34
+
+
+State 50
+
+   67 varlist: ID_TOK COMMA_TOK varlist •
+
+    $default  reduce using rule 67 (varlist)
+
+
+State 51
+
+   64 array_size: LSQUARE_TOK INT_CONST_TOK • RSQUARE_TOK
+
+    RSQUARE_TOK  shift, and go to state 75
+
+
+State 52
+
+   65 array_size: LSQUARE_TOK REAL_CONST_TOK • RSQUARE_TOK
+
+    RSQUARE_TOK  shift, and go to state 76
+
+
+State 53
+
+   19 USER_FN: datatype ID_TOK $@2 param • block
+
+    LCURL_TOK  shift, and go to state 60
+
+    start_block  go to state 61
+    block        go to state 77
+
+
+State 54
+
+   70 varlist: ID_TOK array_size COMMA_TOK • varlist
+
+    ID_TOK  shift, and go to state 49
+
+    varlist  go to state 78
+
+
+State 55
+
+   14 header: HASH_TOK INCLUDE_TOK LT_TOK ID_TOK DOT_TOK • ID_TOK GT_TOK
+
+    ID_TOK  shift, and go to state 79
+
+
+State 56
+
+   21 param: LPAREN_TOK RPAREN_TOK •
+
+    $default  reduce using rule 21 (param)
+
+
+State 57
+
+   24 datatype: INT_TOK •
+
+    $default  reduce using rule 24 (datatype)
+
+
+State 58
+
+   20 param: open_paren params • close_paren
+
+    RPAREN_TOK  shift, and go to state 80
+
+    close_paren  go to state 81
+
+
+State 59
+
+   22 params: datatype • ID_TOK COMMA_TOK params
+   23       | datatype • ID_TOK
+
+    ID_TOK  shift, and go to state 82
+
+
+State 60
+
+   29 start_block: LCURL_TOK •
+
+    $default  reduce using rule 29 (start_block)
+
+
+State 61
+
+   31 block: start_block • blocks end_block
+   32      | start_block • end_block
+
+    LCURL_TOK   shift, and go to state 60
+    RCURL_TOK   shift, and go to state 83
+    WHILE_TOK   shift, and go to state 84
+    IF_TOK      shift, and go to state 85
+    RET_TOK     shift, and go to state 86
+    PRINTF_TOK  shift, and go to state 87
+    ID_TOK      shift, and go to state 88
+    INT_TOK     shift, and go to state 57
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    datatype        go to state 89
+    start_block     go to state 61
+    end_block       go to state 90
+    block           go to state 91
+    blocks          go to state 92
+    STATEMENTS      go to state 93
+    stmt            go to state 94
+    PRINTF_ST       go to state 95
+    DECLARE_ASSIGN  go to state 96
+    EXP_ASSIGN      go to state 97
+    IF_ST           go to state 98
+    IF_PART         go to state 99
+    CONDITIONAL     go to state 100
+    WHILE_ST        go to state 101
+    ITERATIVE       go to state 102
+    FUNCTION_CALL   go to state 103
+
+
+State 62
+
+   17 MAIN_FN: INT_TOK MAIN_TOK $@1 param block •
+
+    $default  reduce using rule 17 (MAIN_FN)
+
+
+State 63
+
+   53 expression: LPAREN_TOK expression • RPAREN_TOK
+   54           | expression • arith_op expression
+
+    RPAREN_TOK  shift, and go to state 104
+    MINUS_TOK   shift, and go to state 68
+    PLUS_TOK    shift, and go to state 69
+    MULT_TOK    shift, and go to state 70
+    DIV_TOK     shift, and go to state 71
+    MOD_TOK     shift, and go to state 72
+
+    arith_op  go to state 74
+
+
+State 64
+
+   94 args: LPAREN_TOK • arg RPAREN_TOK
+   95     | LPAREN_TOK • RPAREN_TOK
+
+    LPAREN_TOK        shift, and go to state 41
+    RPAREN_TOK        shift, and go to state 105
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 106
+    FUNCTION_CALL  go to state 48
+    arg            go to state 107
+
+
+State 65
+
+   61 array_ele: LSQUARE_TOK • ID_TOK RSQUARE_TOK
+   62          | LSQUARE_TOK • INT_CONST_TOK RSQUARE_TOK
+   63          | LSQUARE_TOK • RSQUARE_TOK
+
+    RSQUARE_TOK    shift, and go to state 108
+    ID_TOK         shift, and go to state 109
+    INT_CONST_TOK  shift, and go to state 110
+
+
+State 66
+
+   47 expression: ID_TOK array_ele •
+
+    $default  reduce using rule 47 (expression)
+
+
+State 67
+
+   93 FUNCTION_CALL: ID_TOK args •
+
+    $default  reduce using rule 93 (FUNCTION_CALL)
+
+
+State 68
+
+   56 arith_op: MINUS_TOK •
+
+    $default  reduce using rule 56 (arith_op)
+
+
+State 69
+
+   55 arith_op: PLUS_TOK •
+
+    $default  reduce using rule 55 (arith_op)
+
+
+State 70
+
+   57 arith_op: MULT_TOK •
+
+    $default  reduce using rule 57 (arith_op)
+
+
+State 71
+
+   58 arith_op: DIV_TOK •
+
+    $default  reduce using rule 58 (arith_op)
+
+
+State 72
+
+   59 arith_op: MOD_TOK •
+
+    $default  reduce using rule 59 (arith_op)
+
+
+State 73
+
+   68 varlist: ID_TOK ASSIGN_TOK expression COMMA_TOK • varlist
+
+    ID_TOK  shift, and go to state 49
+
+    varlist  go to state 111
+
+
+State 74
+
+   54 expression: expression arith_op • expression
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 112
+    FUNCTION_CALL  go to state 48
+
+
+State 75
+
+   64 array_size: LSQUARE_TOK INT_CONST_TOK RSQUARE_TOK •
+
+    $default  reduce using rule 64 (array_size)
+
+
+State 76
+
+   65 array_size: LSQUARE_TOK REAL_CONST_TOK RSQUARE_TOK •
+
+    $default  reduce using rule 65 (array_size)
+
+
+State 77
+
+   19 USER_FN: datatype ID_TOK $@2 param block •
+
+    $default  reduce using rule 19 (USER_FN)
+
+
+State 78
+
+   70 varlist: ID_TOK array_size COMMA_TOK varlist •
+
+    $default  reduce using rule 70 (varlist)
+
+
+State 79
+
+   14 header: HASH_TOK INCLUDE_TOK LT_TOK ID_TOK DOT_TOK ID_TOK • GT_TOK
+
+    GT_TOK  shift, and go to state 113
+
+
+State 80
+
+   13 close_paren: RPAREN_TOK •
+
+    $default  reduce using rule 13 (close_paren)
+
+
+State 81
+
+   20 param: open_paren params close_paren •
+
+    $default  reduce using rule 20 (param)
+
+
+State 82
+
+   22 params: datatype ID_TOK • COMMA_TOK params
+   23       | datatype ID_TOK •
+
+    COMMA_TOK  shift, and go to state 114
+
+    $default  reduce using rule 23 (params)
+
+
+State 83
+
+   30 end_block: RCURL_TOK •
+
+    $default  reduce using rule 30 (end_block)
+
+
+State 84
+
+   91 WHILE_ST: WHILE_TOK • $@5 open_paren cond_exp close_paren
+
+    $default  reduce using rule 90 ($@5)
+
+    $@5  go to state 115
+
+
+State 85
+
+   74 IF_ST: IF_TOK • $@3 open_paren cond_exp close_paren
+
+    $default  reduce using rule 73 ($@3)
+
+    $@3  go to state 116
+
+
+State 86
+
+   43 stmt: RET_TOK • expression SEMICOLON_TOK
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 117
+    FUNCTION_CALL  go to state 48
+
+
+State 87
+
+   45 PRINTF_ST: PRINTF_TOK • args SEMICOLON_TOK
+
+    LPAREN_TOK  shift, and go to state 64
+
+    args  go to state 118
+
+
+State 88
+
+   72 EXP_ASSIGN: ID_TOK • ASSIGN_TOK expression
+   93 FUNCTION_CALL: ID_TOK • args
+
+    LPAREN_TOK  shift, and go to state 64
+    ASSIGN_TOK  shift, and go to state 119
+
+    args  go to state 67
+
+
+State 89
+
+   60 DECLARE_ASSIGN: datatype • varlist
+
+    ID_TOK  shift, and go to state 49
+
+    varlist  go to state 23
+
+
+State 90
+
+   32 block: start_block end_block •
+
+    $default  reduce using rule 32 (block)
+
+
+State 91
+
+   33 blocks: block • STATEMENTS blocks
+
+    WHILE_TOK   shift, and go to state 84
+    IF_TOK      shift, and go to state 85
+    RET_TOK     shift, and go to state 86
+    PRINTF_TOK  shift, and go to state 87
+    ID_TOK      shift, and go to state 88
+    INT_TOK     shift, and go to state 57
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    datatype        go to state 89
+    STATEMENTS      go to state 120
+    stmt            go to state 94
+    PRINTF_ST       go to state 95
+    DECLARE_ASSIGN  go to state 96
+    EXP_ASSIGN      go to state 97
+    IF_ST           go to state 98
+    IF_PART         go to state 99
+    CONDITIONAL     go to state 100
+    WHILE_ST        go to state 101
+    ITERATIVE       go to state 102
+    FUNCTION_CALL   go to state 103
+
+
+State 92
+
+   31 block: start_block blocks • end_block
+
+    RCURL_TOK  shift, and go to state 83
+
+    end_block  go to state 121
+
+
+State 93
+
+   34 blocks: STATEMENTS • blocks
+   35       | STATEMENTS •
+
+    LCURL_TOK   shift, and go to state 60
+    WHILE_TOK   shift, and go to state 84
+    IF_TOK      shift, and go to state 85
+    RET_TOK     shift, and go to state 86
+    PRINTF_TOK  shift, and go to state 87
+    ID_TOK      shift, and go to state 88
+    INT_TOK     shift, and go to state 57
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    $default  reduce using rule 35 (blocks)
+
+    datatype        go to state 89
+    start_block     go to state 61
+    block           go to state 91
+    blocks          go to state 122
+    STATEMENTS      go to state 93
+    stmt            go to state 94
+    PRINTF_ST       go to state 95
+    DECLARE_ASSIGN  go to state 96
+    EXP_ASSIGN      go to state 97
+    IF_ST           go to state 98
+    IF_PART         go to state 99
+    CONDITIONAL     go to state 100
+    WHILE_ST        go to state 101
+    ITERATIVE       go to state 102
+    FUNCTION_CALL   go to state 103
+
+
+State 94
+
+   36 STATEMENTS: stmt • STATEMENTS
+   37           | stmt •
+
+    WHILE_TOK   shift, and go to state 84
+    IF_TOK      shift, and go to state 85
+    RET_TOK     shift, and go to state 86
+    PRINTF_TOK  shift, and go to state 87
+    ID_TOK      shift, and go to state 88
+    INT_TOK     shift, and go to state 57
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    WHILE_TOK   [reduce using rule 37 (STATEMENTS)]
+    IF_TOK      [reduce using rule 37 (STATEMENTS)]
+    RET_TOK     [reduce using rule 37 (STATEMENTS)]
+    PRINTF_TOK  [reduce using rule 37 (STATEMENTS)]
+    ID_TOK      [reduce using rule 37 (STATEMENTS)]
+    INT_TOK     [reduce using rule 37 (STATEMENTS)]
+    CHAR_TOK    [reduce using rule 37 (STATEMENTS)]
+    FLOAT_TOK   [reduce using rule 37 (STATEMENTS)]
+    DOUBLE_TOK  [reduce using rule 37 (STATEMENTS)]
+    VOID_TOK    [reduce using rule 37 (STATEMENTS)]
+    $default    reduce using rule 37 (STATEMENTS)
+
+    datatype        go to state 89
+    STATEMENTS      go to state 123
+    stmt            go to state 94
+    PRINTF_ST       go to state 95
+    DECLARE_ASSIGN  go to state 96
+    EXP_ASSIGN      go to state 97
+    IF_ST           go to state 98
+    IF_PART         go to state 99
+    CONDITIONAL     go to state 100
+    WHILE_ST        go to state 101
+    ITERATIVE       go to state 102
+    FUNCTION_CALL   go to state 103
+
+
+State 95
+
+   44 stmt: PRINTF_ST •
+
+    $default  reduce using rule 44 (stmt)
+
+
+State 96
+
+   38 stmt: DECLARE_ASSIGN • SEMICOLON_TOK
+
+    SEMICOLON_TOK  shift, and go to state 124
+
+
+State 97
+
+   39 stmt: EXP_ASSIGN • SEMICOLON_TOK
+
+    SEMICOLON_TOK  shift, and go to state 125
+
+
+State 98
+
+   77 IF_PART: IF_ST • block
+
+    LCURL_TOK  shift, and go to state 60
+
+    start_block  go to state 61
+    block        go to state 126
+
+
+State 99
+
+   78 CONDITIONAL: IF_PART • ELSE_PART
+   79            | IF_PART •
+
+    ELSE_TOK  shift, and go to state 127
+
+    $default  reduce using rule 79 (CONDITIONAL)
+
+    ELSE_PART  go to state 128
+
+
+State 100
+
+   40 stmt: CONDITIONAL •
+
+    $default  reduce using rule 40 (stmt)
+
+
+State 101
+
+   92 ITERATIVE: WHILE_ST • block
+
+    LCURL_TOK  shift, and go to state 60
+
+    start_block  go to state 61
+    block        go to state 129
+
+
+State 102
+
+   41 stmt: ITERATIVE •
+
+    $default  reduce using rule 41 (stmt)
+
+
+State 103
+
+   42 stmt: FUNCTION_CALL • SEMICOLON_TOK
+
+    SEMICOLON_TOK  shift, and go to state 130
+
+
+State 104
+
+   53 expression: LPAREN_TOK expression RPAREN_TOK •
+
+    $default  reduce using rule 53 (expression)
+
+
+State 105
+
+   95 args: LPAREN_TOK RPAREN_TOK •
+
+    $default  reduce using rule 95 (args)
+
+
+State 106
+
+   54 expression: expression • arith_op expression
+   96 arg: expression •
+   97    | expression • COMMA_TOK arg
+
+    MINUS_TOK  shift, and go to state 68
+    PLUS_TOK   shift, and go to state 69
+    MULT_TOK   shift, and go to state 70
+    DIV_TOK    shift, and go to state 71
+    MOD_TOK    shift, and go to state 72
+    COMMA_TOK  shift, and go to state 131
+
+    $default  reduce using rule 96 (arg)
+
+    arith_op  go to state 74
+
+
+State 107
+
+   94 args: LPAREN_TOK arg • RPAREN_TOK
+
+    RPAREN_TOK  shift, and go to state 132
+
+
+State 108
+
+   63 array_ele: LSQUARE_TOK RSQUARE_TOK •
+
+    $default  reduce using rule 63 (array_ele)
+
+
+State 109
+
+   61 array_ele: LSQUARE_TOK ID_TOK • RSQUARE_TOK
+
+    RSQUARE_TOK  shift, and go to state 133
+
+
+State 110
+
+   62 array_ele: LSQUARE_TOK INT_CONST_TOK • RSQUARE_TOK
+
+    RSQUARE_TOK  shift, and go to state 134
+
+
+State 111
+
+   68 varlist: ID_TOK ASSIGN_TOK expression COMMA_TOK varlist •
+
+    $default  reduce using rule 68 (varlist)
+
+
+State 112
+
+   54 expression: expression • arith_op expression
+   54           | expression arith_op expression •
+
+    MINUS_TOK  shift, and go to state 68
+    PLUS_TOK   shift, and go to state 69
+    MULT_TOK   shift, and go to state 70
+    DIV_TOK    shift, and go to state 71
+    MOD_TOK    shift, and go to state 72
+
+    MINUS_TOK  [reduce using rule 54 (expression)]
+    PLUS_TOK   [reduce using rule 54 (expression)]
+    MULT_TOK   [reduce using rule 54 (expression)]
+    DIV_TOK    [reduce using rule 54 (expression)]
+    MOD_TOK    [reduce using rule 54 (expression)]
+    $default   reduce using rule 54 (expression)
+
+    arith_op  go to state 74
+
+
+State 113
+
+   14 header: HASH_TOK INCLUDE_TOK LT_TOK ID_TOK DOT_TOK ID_TOK GT_TOK •
+
+    $default  reduce using rule 14 (header)
+
+
+State 114
+
+   22 params: datatype ID_TOK COMMA_TOK • params
+
+    INT_TOK     shift, and go to state 57
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    params    go to state 135
+    datatype  go to state 59
+
+
+State 115
+
+   91 WHILE_ST: WHILE_TOK $@5 • open_paren cond_exp close_paren
+
+    LPAREN_TOK  shift, and go to state 136
+
+    open_paren  go to state 137
+
+
+State 116
+
+   74 IF_ST: IF_TOK $@3 • open_paren cond_exp close_paren
+
+    LPAREN_TOK  shift, and go to state 136
+
+    open_paren  go to state 138
+
+
+State 117
+
+   43 stmt: RET_TOK expression • SEMICOLON_TOK
+   54 expression: expression • arith_op expression
+
+    MINUS_TOK      shift, and go to state 68
+    PLUS_TOK       shift, and go to state 69
+    MULT_TOK       shift, and go to state 70
+    DIV_TOK        shift, and go to state 71
+    MOD_TOK        shift, and go to state 72
+    SEMICOLON_TOK  shift, and go to state 139
+
+    arith_op  go to state 74
+
+
+State 118
+
+   45 PRINTF_ST: PRINTF_TOK args • SEMICOLON_TOK
+
+    SEMICOLON_TOK  shift, and go to state 140
+
+
+State 119
+
+   72 EXP_ASSIGN: ID_TOK ASSIGN_TOK • expression
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 141
+    FUNCTION_CALL  go to state 48
+
+
+State 120
+
+   33 blocks: block STATEMENTS • blocks
+
+    LCURL_TOK   shift, and go to state 60
+    WHILE_TOK   shift, and go to state 84
+    IF_TOK      shift, and go to state 85
+    RET_TOK     shift, and go to state 86
+    PRINTF_TOK  shift, and go to state 87
+    ID_TOK      shift, and go to state 88
+    INT_TOK     shift, and go to state 57
+    CHAR_TOK    shift, and go to state 3
+    FLOAT_TOK   shift, and go to state 4
+    DOUBLE_TOK  shift, and go to state 5
+    VOID_TOK    shift, and go to state 6
+
+    datatype        go to state 89
+    start_block     go to state 61
+    block           go to state 91
+    blocks          go to state 142
+    STATEMENTS      go to state 93
+    stmt            go to state 94
+    PRINTF_ST       go to state 95
+    DECLARE_ASSIGN  go to state 96
+    EXP_ASSIGN      go to state 97
+    IF_ST           go to state 98
+    IF_PART         go to state 99
+    CONDITIONAL     go to state 100
+    WHILE_ST        go to state 101
+    ITERATIVE       go to state 102
+    FUNCTION_CALL   go to state 103
+
+
+State 121
+
+   31 block: start_block blocks end_block •
+
+    $default  reduce using rule 31 (block)
+
+
+State 122
+
+   34 blocks: STATEMENTS blocks •
+
+    $default  reduce using rule 34 (blocks)
+
+
+State 123
+
+   36 STATEMENTS: stmt STATEMENTS •
+
+    $default  reduce using rule 36 (STATEMENTS)
+
+
+State 124
+
+   38 stmt: DECLARE_ASSIGN SEMICOLON_TOK •
+
+    $default  reduce using rule 38 (stmt)
+
+
+State 125
+
+   39 stmt: EXP_ASSIGN SEMICOLON_TOK •
+
+    $default  reduce using rule 39 (stmt)
+
+
+State 126
+
+   77 IF_PART: IF_ST block •
+
+    $default  reduce using rule 77 (IF_PART)
+
+
+State 127
+
+   76 ELSE_PART: ELSE_TOK • $@4 block
+
+    $default  reduce using rule 75 ($@4)
+
+    $@4  go to state 143
+
+
+State 128
+
+   78 CONDITIONAL: IF_PART ELSE_PART •
+
+    $default  reduce using rule 78 (CONDITIONAL)
+
+
+State 129
+
+   92 ITERATIVE: WHILE_ST block •
+
+    $default  reduce using rule 92 (ITERATIVE)
+
+
+State 130
+
+   42 stmt: FUNCTION_CALL SEMICOLON_TOK •
+
+    $default  reduce using rule 42 (stmt)
+
+
+State 131
+
+   97 arg: expression COMMA_TOK • arg
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 106
+    FUNCTION_CALL  go to state 48
+    arg            go to state 144
+
+
+State 132
+
+   94 args: LPAREN_TOK arg RPAREN_TOK •
+
+    $default  reduce using rule 94 (args)
+
+
+State 133
+
+   61 array_ele: LSQUARE_TOK ID_TOK RSQUARE_TOK •
+
+    $default  reduce using rule 61 (array_ele)
+
+
+State 134
+
+   62 array_ele: LSQUARE_TOK INT_CONST_TOK RSQUARE_TOK •
+
+    $default  reduce using rule 62 (array_ele)
+
+
+State 135
+
+   22 params: datatype ID_TOK COMMA_TOK params •
+
+    $default  reduce using rule 22 (params)
+
+
+State 136
+
+   12 open_paren: LPAREN_TOK •
+
+    $default  reduce using rule 12 (open_paren)
+
+
+State 137
+
+   91 WHILE_ST: WHILE_TOK $@5 open_paren • cond_exp close_paren
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 145
+    cond_exp       go to state 146
+    FUNCTION_CALL  go to state 48
+
+
+State 138
+
+   74 IF_ST: IF_TOK $@3 open_paren • cond_exp close_paren
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 145
+    cond_exp       go to state 147
+    FUNCTION_CALL  go to state 48
+
+
+State 139
+
+   43 stmt: RET_TOK expression SEMICOLON_TOK •
+
+    $default  reduce using rule 43 (stmt)
+
+
+State 140
+
+   45 PRINTF_ST: PRINTF_TOK args SEMICOLON_TOK •
+
+    $default  reduce using rule 45 (PRINTF_ST)
+
+
+State 141
+
+   54 expression: expression • arith_op expression
+   72 EXP_ASSIGN: ID_TOK ASSIGN_TOK expression •
+
+    MINUS_TOK  shift, and go to state 68
+    PLUS_TOK   shift, and go to state 69
+    MULT_TOK   shift, and go to state 70
+    DIV_TOK    shift, and go to state 71
+    MOD_TOK    shift, and go to state 72
+
+    $default  reduce using rule 72 (EXP_ASSIGN)
+
+    arith_op  go to state 74
+
+
+State 142
+
+   33 blocks: block STATEMENTS blocks •
+
+    $default  reduce using rule 33 (blocks)
+
+
+State 143
+
+   76 ELSE_PART: ELSE_TOK $@4 • block
+
+    LCURL_TOK  shift, and go to state 60
+
+    start_block  go to state 61
+    block        go to state 148
+
+
+State 144
+
+   97 arg: expression COMMA_TOK arg •
+
+    $default  reduce using rule 97 (arg)
+
+
+State 145
+
+   54 expression: expression • arith_op expression
+   80 cond_exp: expression •
+   81         | expression • comparison expression
+
+    GT_TOK     shift, and go to state 149
+    LT_TOK     shift, and go to state 150
+    MINUS_TOK  shift, and go to state 68
+    PLUS_TOK   shift, and go to state 69
+    MULT_TOK   shift, and go to state 70
+    DIV_TOK    shift, and go to state 71
+    MOD_TOK    shift, and go to state 72
+    EQ_TOK     shift, and go to state 151
+    GTE_TOK    shift, and go to state 152
+    LTE_TOK    shift, and go to state 153
+    AND_TOK    shift, and go to state 154
+    OR_TOK     shift, and go to state 155
+    NEQ_TOK    shift, and go to state 156
+
+    $default  reduce using rule 80 (cond_exp)
+
+    arith_op    go to state 74
+    comparison  go to state 157
+
+
+State 146
+
+   91 WHILE_ST: WHILE_TOK $@5 open_paren cond_exp • close_paren
+
+    RPAREN_TOK  shift, and go to state 80
+
+    close_paren  go to state 158
+
+
+State 147
+
+   74 IF_ST: IF_TOK $@3 open_paren cond_exp • close_paren
+
+    RPAREN_TOK  shift, and go to state 80
+
+    close_paren  go to state 159
+
+
+State 148
+
+   76 ELSE_PART: ELSE_TOK $@4 block •
+
+    $default  reduce using rule 76 (ELSE_PART)
+
+
+State 149
+
+   82 comparison: GT_TOK •
+
+    $default  reduce using rule 82 (comparison)
+
+
+State 150
+
+   83 comparison: LT_TOK •
+
+    $default  reduce using rule 83 (comparison)
+
+
+State 151
+
+   87 comparison: EQ_TOK •
+
+    $default  reduce using rule 87 (comparison)
+
+
+State 152
+
+   84 comparison: GTE_TOK •
+
+    $default  reduce using rule 84 (comparison)
+
+
+State 153
+
+   85 comparison: LTE_TOK •
+
+    $default  reduce using rule 85 (comparison)
+
+
+State 154
+
+   88 comparison: AND_TOK •
+
+    $default  reduce using rule 88 (comparison)
+
+
+State 155
+
+   89 comparison: OR_TOK •
+
+    $default  reduce using rule 89 (comparison)
+
+
+State 156
+
+   86 comparison: NEQ_TOK •
+
+    $default  reduce using rule 86 (comparison)
+
+
+State 157
+
+   81 cond_exp: expression comparison • expression
+
+    LPAREN_TOK        shift, and go to state 41
+    ID_TOK            shift, and go to state 42
+    INT_CONST_TOK     shift, and go to state 43
+    CHAR_CONST_TOK    shift, and go to state 44
+    REAL_CONST_TOK    shift, and go to state 45
+    STRING_CONST_TOK  shift, and go to state 46
+
+    expression     go to state 160
+    FUNCTION_CALL  go to state 48
+
+
+State 158
+
+   91 WHILE_ST: WHILE_TOK $@5 open_paren cond_exp close_paren •
+
+    $default  reduce using rule 91 (WHILE_ST)
+
+
+State 159
+
+   74 IF_ST: IF_TOK $@3 open_paren cond_exp close_paren •
+
+    $default  reduce using rule 74 (IF_ST)
+
+
+State 160
+
+   54 expression: expression • arith_op expression
+   81 cond_exp: expression comparison expression •
+
+    MINUS_TOK  shift, and go to state 68
+    PLUS_TOK   shift, and go to state 69
+    MULT_TOK   shift, and go to state 70
+    DIV_TOK    shift, and go to state 71
+    MOD_TOK    shift, and go to state 72
+
+    $default  reduce using rule 81 (cond_exp)
+
+    arith_op  go to state 74
